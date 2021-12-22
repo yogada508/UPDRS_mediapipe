@@ -53,8 +53,8 @@ def hand_detection(cap):
                     hand1 = results.multi_hand_landmarks[1]
                     #two same hands
                     if(results.multi_handedness[0].classification[0].label == results.multi_handedness[1].classification[0].label):
-                        hand0_x = hand0.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x
-                        hand1_x = hand1.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x
+                        hand0_x = hand0.landmark[mp_hands.HandLandmark.THUMB_TIP].x
+                        hand1_x = hand1.landmark[mp_hands.HandLandmark.THUMB_TIP].x
 
                         left_hand = hand0 if hand0_x > hand1_x else hand1
                         right_hand = hand1 if hand0_x > hand1_x else hand0
@@ -65,11 +65,11 @@ def hand_detection(cap):
                 
                 if(right_hand != None):
                     mp_drawing.draw_landmarks(annotated_image, right_hand, mp_hands.HAND_CONNECTIONS)
-                    record_right.append(right_hand.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y)
+                    record_right.append(right_hand.landmark[mp_hands.HandLandmark.THUMB_TIP].x)
                     #print(frame_count,"right", right_hand.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x)
                 if(left_hand != None):
                     mp_drawing.draw_landmarks(annotated_image, left_hand, mp_hands.HAND_CONNECTIONS)
-                    record_left.append(left_hand.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y)
+                    record_left.append(left_hand.landmark[mp_hands.HandLandmark.THUMB_TIP].x)
                     #print(frame_count,"left", left_hand.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x)
 
                 #after processing the hand, flip back the image  
@@ -103,7 +103,7 @@ def find_peak(record_right, record_left):
             label = "left hand"
 
         middle = (max(smooth)+min(smooth))/2
-        pro = (max(smooth) - middle) * 0.8
+        pro = (max(smooth) - middle) * 0.7
 
         peaks, _ = signal.find_peaks(smooth,height=middle,prominence=pro)
 
@@ -121,7 +121,7 @@ def find_peak(record_right, record_left):
         axs[hand].title.set_text(label)
 
     fig.tight_layout()
-    fig.savefig('./demo_result/hand_movement.png')
+    fig.savefig('./demo_result/pronation.png')
 
     return fist_closing_frame, action_time_list
 
@@ -139,7 +139,7 @@ def demo():
     fps = round(cap.get(cv2.CAP_PROP_FPS))
 
     #create video writer to write detected_video
-    output_video = "./demo_result/hand_movement_result.mp4"
+    output_video = "./demo_result/pronation.mp4"
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_video, fourcc, fps, RES)
 
@@ -149,7 +149,7 @@ def demo():
     fist_closing_frame, action_time_list = find_peak(record_right,record_left)
     print("right hand action count:",len(fist_closing_frame[0]), "frequency: ",len(fist_closing_frame[0])/(len(img_list)/fps),"regularity:",np.std(np.array(action_time_list[0]))/fps)
     print("left hand action count:",len(fist_closing_frame[1]),"frequency: ",len(fist_closing_frame[1])/(len(img_list)/fps) ,"regularity:",np.std(np.array(action_time_list[1]))/fps)
-    print("Write result image to ./demo_result/hand_movement.png")
+    print("Write result image to ./demo_result/proantion.png")
 
     #save video
     action_count = [0,0]
@@ -157,7 +157,7 @@ def demo():
     right_count = -1
     left_count = -1
     temp_count = 0
-    print("Write result video to ./demo_result/hand_movement_result.mp4")
+    print("Write result video to ./demo_result/pronation.mp4")
     for i in range(len(img_list)):
         label = ""
         text_loc_x = 0
@@ -178,8 +178,8 @@ def demo():
             if( (len(fist_closing_frame[hand]) > action_count[hand]) and temp_count == fist_closing_frame[hand][action_count[hand]]):
                 action_time[hand] = action_time_list[hand][action_count[hand]]
                 action_count[hand] += 1
-            cv2.putText(img_list[i],f'action_count({label}):{action_count[hand]}',(text_loc_x, 70), cv2.FONT_HERSHEY_SIMPLEX,1.5, (0, 0, 0), 3, cv2.LINE_AA)
-            cv2.putText(img_list[i],f'action_time({label}):{action_time[hand]/fps:.2f}s',(text_loc_x, 120), cv2.FONT_HERSHEY_SIMPLEX,1.5, (0, 0, 0), 3, cv2.LINE_AA)
+            cv2.putText(img_list[i],f'action_count({label}):{action_count[hand]}',(text_loc_x, 70), cv2.FONT_HERSHEY_SIMPLEX,1.5, (255, 0, 0), 3, cv2.LINE_AA)
+            cv2.putText(img_list[i],f'action_time({label}):{action_time[hand]/fps:.2f}s',(text_loc_x, 120), cv2.FONT_HERSHEY_SIMPLEX,1.5, (255, 0, 0), 3, cv2.LINE_AA)
         out.write(img_list[i])
     out.release()
 
