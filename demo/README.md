@@ -14,19 +14,19 @@
 ```bash
 python3.9 hand_movement.py -i [INPUT VIDEO PATH]
 ```
-It will output two file: `hand_movement_result.mp4` for annotated video and `hand_movement.png` for waveform
+It will output two file to ./demo_result/: `hand_movement_result.mp4` for annotated video and `hand_movement.png` for waveform
 
 ### Pronation (前臂迴旋)
 ```bash
 python3.9 pronation.py -i [INPUT VIDEO PATH]
 ```
-It will output two file: `pronation.mp4` for annotated video and `pronation.png` for waveform
+It will output two file to ./demo_result/: `pronation.mp4` for annotated video and `pronation.png` for waveform
 
 ### Leg Agility (雙腳靈敏度))
 ```bash
 python3.9 leg_agility.py -i [INPUT VIDEO PATH] -l [right|left]
 ```
-It will output two file base on -l argument: 
+It will output two file to ./demo_result/ base on -l argument: 
 * **-l left:** `left_leg_agility.mp4` for annotated video and `left_leg_agility.png` for waveform
 * **-l right:** `right_leg_agility.mp4` for annotated video and `right_leg_agility.png` for waveform
 
@@ -34,4 +34,4 @@ It will output two file base on -l argument:
 ```bash
 python3.9 arise_from_chair.py -i [INPUT VIDEO PATH]
 ```
-It will output two file: `arise_from_chair.mp4` for annotated video and `arise_from_chair.png` for waveform
+It will output two file to ./demo_result/: `arise_from_chair.mp4` for annotated video and `arise_from_chair.png` for waveform
