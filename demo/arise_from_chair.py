@@ -55,7 +55,7 @@ def find_peak(shoulder):
 
 
     mid = (min(copy) + max(copy))/2
-    pro = (max(copy) - mid)
+    pro = (max(copy) - mid) * 0.5
 
     peaks, _ = signal.find_peaks(copy,height=mid,prominence=pro)
     valley, _ = signal.find_peaks(np.array(copy)*-1,height=mid*-1)
